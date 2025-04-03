@@ -1,0 +1,43 @@
+.message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 5px;
+    border-radius: 10px;
+}
+
+.message:hover {
+    cursor: pointer;
+    background-color: #33020213;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    align-items: center;
+    font-weight: bold;
+    color: white;
+    font-size: 15px;
+}
+
+.content h2 {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.content p {
+    font-size: 13px;
+    font-weight: lighter;
+}
+
+.notRead{
+    width: 8px;
+    height: 8px;
+    margin-left: 30px;
+    border-radius: 50%;
+    background-color: red;
+}
