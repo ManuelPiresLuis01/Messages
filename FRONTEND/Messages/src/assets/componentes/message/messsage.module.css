@@ -1,0 +1,42 @@
+.messageLoged {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.messageLoged div {
+    text-align: right;
+    max-width: 300px;
+    height: fit-content;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #13135a;
+    color: white;
+    font-weight: bold;
+    padding: 11px;
+    font-size: 15px;
+    font-weight: lighter;
+}
+
+
+.messageNotLoged {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+}
+
+.messageNotLoged div {
+    text-align: left;
+    max-width: 300px;
+    height: fit-content;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #0d0d0e;
+    color: white;
+    font-weight: bold;
+    padding: 11px;
+    font-size: 15px;
+    font-weight: lighter;
+}
