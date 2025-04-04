@@ -7,23 +7,35 @@ import { useEffect, useState } from "react";
 import Api from "../../../services/api.tsx";
 import Message from "../../componentes/messages/Message";
 import { MessageUserLoged, MessageUserNotLoged } from "../../componentes/message/message";
+import { useParams } from "react-router-dom";
 
 interface users {
     nome: string
-    id:string
+    id: string
+}
+
+interface userPage {
+    nome: string
+    email: string
 }
 
 export default function Messages() {
-    const [usuarios, setUsuarios] = useState<users[]>([])    
+    const { id } = useParams()
+    const [usuarios, setUsuarios] = useState<users[]>([])
+    const [usuariosId, setUsuariosId] = useState<userPage>()
+    useEffect(() => {
+        const fetch = async () => {
+            const response = await Api.get("/getUSers");
+            setUsuarios(response.data.usuarios);
+        }
+        const fetch1 = async () => {
+            const response = await Api.get(`/getUserById/${id}`);
+            setUsuariosId(response.data.usuario);
+        }
+        fetch1()
+        fetch()
+    }, [])
 
-        useEffect(() => {
-            const fetch = async () => {
-                const response = await Api.get("/getUSers");
-                setUsuarios(response.data.usuarios);
-            }
-            fetch()
-        }, [])
-    
     return (
         <div className={Style.main}>
             <div className={Style.rooms}>
@@ -37,11 +49,11 @@ export default function Messages() {
                 </div>
                 <div className={Style.role}>
                     {
-                        usuarios && usuarios.map(users=>(
+                        usuarios && usuarios.map(users => (
                             <Message
-                            name={users.nome}
-                            id={users.id}
-                        />
+                                name={users.nome}
+                                id={users.id}
+                            />
                         ))
                     }
                     <Message
@@ -54,10 +66,12 @@ export default function Messages() {
             <div className={Style.messages}>
                 <div className={Style.HeaderUser}>
                     <div>
-                        <div className={Style.avatar}>{"nome".charAt(0)}</div>
-                        <h1>Nome</h1>
+                        <div className={Style.avatar}>{usuariosId?.nome.charAt(0)}</div>
+                        <h1>{usuariosId?.nome}</h1>
                     </div>
-                    <i><HiMiniInformationCircle /></i>
+                    <abbr title={`${usuariosId?.nome}, ${usuariosId?.email}`}>
+                        <i><HiMiniInformationCircle /></i>
+                    </abbr>
                 </div>
                 <div className={Style.ContainerMessagesList}>
                     <div className={Style.messagesList}>
