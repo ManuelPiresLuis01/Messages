@@ -34,7 +34,7 @@ export default function Messages() {
         }
         fetch1()
         fetch()
-    }, [])
+    }, [id])
 
     return (
         <div className={Style.main}>
@@ -56,11 +56,6 @@ export default function Messages() {
                             />
                         ))
                     }
-                    <Message
-                        name="Manuel Pires"
-                        id={"dfgrfg"}
-                    />
-
                 </div>
             </div>
             <div className={Style.messages}>
@@ -69,7 +64,7 @@ export default function Messages() {
                         <div className={Style.avatar}>{usuariosId?.nome.charAt(0)}</div>
                         <h1>{usuariosId?.nome}</h1>
                     </div>
-                    <abbr title={`${usuariosId?.nome}, ${usuariosId?.email}`}>
+                    <abbr title={`nome:${usuariosId?.nome} , email:${usuariosId?.email}`}>
                         <i><HiMiniInformationCircle /></i>
                     </abbr>
                 </div>

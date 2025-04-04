@@ -14,9 +14,8 @@ const submit = async (e:React.FormEvent)=>{
 
     try {
         const response = await Api.post("/signin",{email,password})
-        console.log(response.data)
         localStorage.setItem("token",response.data.token)
-        navigate("/messages")
+        navigate("/main")
     } catch (error) {
         console.error(error)
     }
