@@ -41,3 +41,8 @@
     border-radius: 50%;
     background-color: red;
 }
+
+a{
+    color: black;
+    text-decoration: none;
+}

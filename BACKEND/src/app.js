@@ -1,6 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import signup from './controlers/signup.js';
+import signin from './controlers/signin.js';
+import getUserProfile from './controlers/userLoged.js';
+import getAllUsers from './controlers/getUsers.js'
+import getUserById from './controlers/getUserById.js';
+import verifyToken from './middleware/verifyToken.js';
 
 const app = express();
 app.use(cors());
@@ -11,6 +16,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signup", signup)
-
+app.post("/signin", signin)
+app.get("/me", verifyToken, getUserProfile);
+app.get("/getUsers", verifyToken,getAllUsers);
+app.get("/getUserById/:id", verifyToken,getUserById);
 
 export default app;
