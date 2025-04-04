@@ -1,28 +1,30 @@
 import db from "../models/db.js";
 import { hashPassword } from "../SERVICES/authservice.js";
+// Controller de Cadastro
+const signup = async (req, res) => {
+    const { name, email, password } = req.body;
 
-
-const Signup = async (req, res) => {
-    const { username, email, password } = req.body;
     try {
-
-        db.query('SELECT id FROM usuarios WHERE email = ?', [email], (err, result) => {
+        // Verificar se o usuário já existe
+        db.query('SELECT id FROM usuarios WHERE email = ?', [email], async (err, result) => {
             if (err) {
                 return res.status(500).json({ error: 'Erro no servidor banco' });
             }
             if (result.length > 0) {
                 return res.status(400).json({ message: 'Usuário já existe' });
             }
-            const hash = hashPassword(password)
-            if (!hash) {
-                return res.status(500)
-            }
-            db.query('INSERT INTO `usuarios` (`username`, `email`, `password_hash`, `created_at`) VALUES (?, ?, ?, current_timestamp())',
-                [username, email, hash], (err, result) => {
+
+            // Criptografar a senha
+            const passwordHash = await hashPassword(password);
+            console.log(passwordHash);
+            // Inserir o usuário no banco de dados
+            db.query('INSERT INTO usuarios (nome, email, password_hash, created_at) VALUES (?, ?, ?, current_timestamp())',
+                [name, email, passwordHash], (err, result) => {
                     if (err) {
-                        return res.status(500).json({ error: 'Erro no servidor ' });
+                        console.log('Erro ao executar a consulta:', err);
+                        return res.status(500).json({ error: 'Erro ao criar usuário' });
                     }
-                    res.status(201).json({ message: 'Usuário criado com sucesso', id: result.insertId, username, email });
+                    res.status(201).json({ message: 'Usuário criado com sucesso', id: result.insertId, name, email });
                 });
         });
     } catch (err) {
@@ -30,4 +32,5 @@ const Signup = async (req, res) => {
     }
 };
 
-export default Signup
+
+export default signup

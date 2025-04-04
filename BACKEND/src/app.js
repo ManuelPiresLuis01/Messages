@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import Signup from './controlers/signup.js';
+import signup from './controlers/signup.js';
 
 const app = express();
 app.use(cors());
@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
     res.send("Hello World");
 });
 
-app.post("/signup", Signup)
+app.post("/signup", signup)
 
 
 export default app;
