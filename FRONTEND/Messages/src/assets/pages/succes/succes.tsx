@@ -6,15 +6,15 @@ interface props {
     value: string
     where: string
 }
+interface prop {
+    value: string
+}
 
 function SuccessModal(p: props) {
     const navigate = useNavigate();
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (p.where == "main")
-                window.location.href = `/${p.where}`
-            else
                 navigate(`/${p.where}`);
         }, Number(3000));
         return () => clearTimeout(timer);
@@ -32,4 +32,25 @@ function SuccessModal(p: props) {
     );
 };
 
-export default SuccessModal;
+function SuccessLogin(p: prop) {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+                window.location.href = `/`
+        }, Number(3000));
+        return () => clearTimeout(timer);
+    }, [navigate]);
+
+    return (
+        <p className={styles.overlay}>
+            <p className={styles.modal}>
+                <h2>{p.value}</h2>
+                <p className={styles.loadingline}>
+                    <p className={styles.loadingbar}></p>
+                </p>
+            </p>
+        </p>
+    );
+};
+export  {SuccessModal,SuccessLogin};

@@ -3,7 +3,7 @@ import style from "./Style.module.css"
 import Api from '../../../services/api';
 import { useState } from 'react';
 import { ClipLoader} from 'react-spinners';
-import SuccessModal from '../succes/succes';
+import{ SuccessModal,SuccessLogin} from '../succes/succes';
 
 export function SignIn() {
     const [email, Setemail] = useState<string>("")
@@ -29,7 +29,7 @@ export function SignIn() {
         <div className={style.sign}>
             <div className={style.bgLogin}></div>
             <div>
-                {succes && <SuccessModal value='Login feito com sucesso' where='main'/>}
+                {succes && <SuccessLogin value='Login feito com sucesso'/>}
                 <div className={style.form}>
                     <h1>Entrar</h1>
                     <form onSubmit={submit}>

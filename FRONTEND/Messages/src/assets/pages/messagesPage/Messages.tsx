@@ -12,7 +12,7 @@ import { MessageUserLoged, MessageUserNotLoged } from "../../componentes/message
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("http://192.168.43.224:3001");
+const socket = io(import.meta.env.VITE_API_URL);
 
 interface users {
     nome: string
@@ -189,7 +189,7 @@ export default function Messages() {
                                         </div>
                                     ))
                                 }
-                                {chat.length == 0 && <p>Usuarios nao encontrados</p>}
+                                {chat.length == 0 && <p>Sem conversas</p>}
                             </div>
                         </div>
                 }

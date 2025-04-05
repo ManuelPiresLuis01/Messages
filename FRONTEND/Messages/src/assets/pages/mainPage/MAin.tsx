@@ -116,7 +116,7 @@ export default function Main() {
                                         </div>
                                     ))
                                 }
-                                {chat.length == 0 && <p>Usuarios nao encontrados</p>}
+                                {chat.length == 0 && <p>Sem conversas</p>}
                             </div>
                         </div>
                 }
