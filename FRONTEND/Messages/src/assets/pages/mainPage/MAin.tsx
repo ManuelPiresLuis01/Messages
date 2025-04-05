@@ -14,6 +14,7 @@ interface users {
 }
 
 interface chat {
+    id: string,
     usuario_id: number,
     nome_usuario_conversa: string,
     created_at: string
@@ -25,6 +26,7 @@ export default function Main() {
     const [menu, setMenu] = useState<boolean>(true)
     const [search, setSearch] = useState<string>("")
     const [chat, setChat] = useState<chat[]>([])
+    const [room, setRoom] = useState<boolean>(true)
     const [message, setMessage] = useState<string>("Pesquisa por usuarios")
     const thereAre = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -70,7 +72,7 @@ export default function Main() {
 
     return (
         <div className={Style.main}>
-            <div className={Style.rooms}>
+            <div  className={room ? Style.rooms : Style.notRooms}>
                 <div className={Style.title}>
                     <h1>Conversar</h1>
                     <i onClick={logout}><IoIosLogOut /></i>
@@ -89,13 +91,14 @@ export default function Main() {
                             <div className={Style.role}>
                                 {
                                     usuarios && usuarios.map(users => (
-                                        <Message
+                                        <div key={users.id} onClick={()=>setRoom(!room)} >
+                                            <Message
                                             name={users.nome}
                                             id={users.id}
                                         />
+                                        </div>
                                     ))
                                 }
-
 
                                 {usuarios.length == 0 && <p>{message}</p>}
                             </div>
@@ -105,19 +108,21 @@ export default function Main() {
                             <div className={Style.role}>
                                 {
                                     chat && chat.map((chatItem: chat) => (
+                                        <div key={chatItem.id} onClick={()=>setRoom(!room)} >
                                         <Message
                                             name={chatItem.nome_usuario_conversa}
                                             id={chatItem.usuario_id.toString()}
                                         />
+                                        </div>
                                     ))
                                 }
-                                {chat.length == 0 && <p>Sem conversas, comece uma pesquisando por um usuario</p>}
+                                {chat.length == 0 && <p>Usuarios nao encontrados</p>}
                             </div>
                         </div>
                 }
             </div>
             <div className={Style.messages}>
-                <div className={Style.ContainerMessagesList}>
+                <div className={`${Style.ContainerMessagesList} ${Style.List}`}>
                     <div className={Style.messagesList}>
                         <div className={Style.welcome}>
                             <h1>Seja bem vindo</h1>

@@ -53,8 +53,11 @@
     border-radius: 20px;
 }
 
-
 .form button {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
     border: none;
     background-color: #353535;
     color: #fff;
@@ -80,3 +83,30 @@
     text-decoration: underline;
 }
 
+@media screen and (max-width:800px){
+    .sign {
+        flex-direction: column;
+        overflow-y: scroll;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .sign div {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 45vh;
+    }
+
+    .form h1 {
+        padding-left: 10px;
+    }
+    
+    
+    .form form input,.form button {
+        width: 320px;
+    }
+    
+
+}

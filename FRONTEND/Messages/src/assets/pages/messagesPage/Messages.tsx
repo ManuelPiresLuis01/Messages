@@ -3,7 +3,7 @@ import { RiChatSmile3Line } from "react-icons/ri";
 import { FaUsers } from "react-icons/fa6";
 import { IoIosLogOut } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
-import { HiMiniInformationCircle } from "react-icons/hi2";
+import { IoOptionsSharp } from "react-icons/io5";
 import { IoSend } from "react-icons/io5";
 import { useRef, useEffect, useState } from "react";
 import Api from "../../../services/api.tsx";
@@ -12,7 +12,7 @@ import { MessageUserLoged, MessageUserNotLoged } from "../../componentes/message
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io('http://localhost:3000');
+const socket = io("http://192.168.43.224:3001");
 
 interface users {
     nome: string
@@ -34,6 +34,7 @@ interface Mensagem {
 }
 
 interface chat {
+    id: number,
     usuario_id: number,
     nome_usuario_conversa: string,
     created_at: string
@@ -50,6 +51,7 @@ export default function Messages() {
     const [menu, setMenu] = useState<boolean>(true)
     const [search, setSearch] = useState<string>("")
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [room, setRoom] = useState<boolean>(false)
     const [message, setMessage] = useState<string>("Pesquisa por usuarios")
     const thereAre = async (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -65,13 +67,13 @@ export default function Messages() {
 
     useEffect(() => {
         if (messagesEndRef.current) {
-          messagesEndRef.current.scrollTo({
-            top: messagesEndRef.current.scrollHeight,
-            behavior: 'smooth'
-          });
+            messagesEndRef.current.scrollTo({
+                top: messagesEndRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
         }
-      }, [mensagens]);
-      
+    }, [mensagens]);
+
 
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -143,7 +145,7 @@ export default function Messages() {
 
     return (
         <div className={Style.main}>
-            <div className={Style.rooms}>
+            <div className={room ? Style.rooms : Style.notRooms}>
                 <div className={Style.title}>
                     <h1>Conversar</h1>
                     <i onClick={logout}><IoIosLogOut /></i>
@@ -162,10 +164,12 @@ export default function Messages() {
                             <div className={Style.role}>
                                 {
                                     usuarios && usuarios.map(users => (
-                                        <Message
+                                        <div key={users.id} onClick={()=>setRoom(!room)} >
+                                            <Message
                                             name={users.nome}
                                             id={users.id}
                                         />
+                                        </div>
                                     ))
                                 }
 
@@ -177,10 +181,12 @@ export default function Messages() {
                             <div className={Style.role}>
                                 {
                                     chat && chat.map((chatItem: chat) => (
+                                        <div key={chatItem.id} onClick={()=>setRoom(!room)} >
                                         <Message
                                             name={chatItem.nome_usuario_conversa}
                                             id={chatItem.usuario_id.toString()}
                                         />
+                                        </div>
                                     ))
                                 }
                                 {chat.length == 0 && <p>Usuarios nao encontrados</p>}
@@ -195,7 +201,7 @@ export default function Messages() {
                         <h1>{usuariosId?.nome}</h1>
                     </div>
                     <abbr title={`nome:${usuariosId?.nome} , email:${usuariosId?.email}`}>
-                        <i><HiMiniInformationCircle /></i>
+                        <i onClick={()=>setRoom(!room)}>< IoOptionsSharp  /></i>
                     </abbr>
                 </div>
                 <div className={Style.ContainerMessagesList}>
@@ -203,15 +209,15 @@ export default function Messages() {
                         {
                             mensagens.length > 0 && (
                                 <div className={Style.messageList} ref={messagesEndRef}>
-                                {mensagens.map((mensagem) =>
-                                  mensagem.remetente_id === Number(id) ? (
-                                    <MessageUserNotLoged key={mensagem.id} message={mensagem.conteudo} />
-                                  ) : (
-                                    <MessageUserLoged key={mensagem.id} message={mensagem.conteudo} />
-                                  )
-                                )}
-                              </div>
-                              
+                                    {mensagens.map((mensagem) =>
+                                        mensagem.remetente_id === Number(id) ? (
+                                            <MessageUserNotLoged key={mensagem.id} message={mensagem.conteudo} />
+                                        ) : (
+                                            <MessageUserLoged key={mensagem.id} message={mensagem.conteudo} />
+                                        )
+                                    )}
+                                </div>
+
                             )
                         }
 

@@ -1,6 +1,9 @@
 import app from "./app.js";
 import http from 'http';
 import { Server } from 'socket.io';
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const server = http.createServer(app);
 
@@ -24,8 +27,8 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
-server.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0',  () => {
+  console.log(`http://0.0.0.0:${PORT}`);
 });

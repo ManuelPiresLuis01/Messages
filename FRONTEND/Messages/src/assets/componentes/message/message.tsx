@@ -2,7 +2,7 @@ import Style from "./messsage.module.css"
 interface MessageProps {
     message: string;
 }
-
+ 
 export function MessageUserLoged(p: MessageProps) {
     return (
         <div className={Style.messageLoged}>

@@ -13,6 +13,14 @@
     height: 100vh;
 }
 
+.notRooms {
+    width: 0;
+    overflow: hidden;
+    height: 100vh;
+    padding: 0;
+    width: 0;
+}
+
 .title {
     display: flex;
     justify-content: space-between;
@@ -44,22 +52,23 @@
     gap: 10px;
     justify-content: space-between;
     padding: 0 10px;
-    border-radius: 5px;
+    height: 40px;
+    border-radius: 10px;
     background-color: #5a5959bb;
     margin-bottom: 20px;
 }
 
 .search {
     font-size: 20px;
-    color: #dddddd;
+    color: #fff;
 }
 
-.search input{
+.search input {
     color: #dddddd;
     width: 100%;
 }
 
-.role{
+.role {
     width: 100%;
     height: 82vh;
     display: flex;
@@ -70,76 +79,76 @@
 }
 
 
-.role::-webkit-scrollbar-thumb{
-   width: 10px;
-   border-radius: 20px;
-   background-color: #313131;
+.role::-webkit-scrollbar-thumb {
+    width: 10px;
+    border-radius: 20px;
+    background-color: #313131;
 }
 
 
-.role::-webkit-scrollbar{
+.role::-webkit-scrollbar {
     width: 5px;
     border-radius: 30px;
     background-color: #31313128;
- }
-
- .messages{
-  width: 100%;
-  height: 100vh;
-  padding: 10px 0;
- }
-
- .HeaderUser{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 0 20px;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #313131;
 }
 
-.HeaderUser div{
+.messages {
+    width: 100%;
+    height: 100vh;
+    padding: 10px 0;
+}
+
+.HeaderUser {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #313131;
+}
+
+.HeaderUser div {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.avatar{
-width: 50px;
-height: 50px;
-border-radius: 50%;
-background-color: #000000;
-color: white;
-font-size: 20px;
-font-weight: bold;
-display: flex;
-align-items: center;
-justify-content: center;
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #000000;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.HeaderUser h1{
-   font-size: 15px;
-   color: #313131;
-   font-weight: bold;
+.HeaderUser h1 {
+    font-size: 15px;
+    color: #313131;
+    font-weight: bold;
 }
 
-.HeaderUser i{
+.HeaderUser i {
     font-size: 30px;
     cursor: pointer;
     color: #313131;
 }
 
-.ContainerMessagesList{
+.ContainerMessagesList {
     position: relative;
     width: 100%;
     display: flex;
-justify-content: center;
+    justify-content: center;
     height: 90%;
 }
 
-.inputSendMessage{
+.inputSendMessage {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -158,12 +167,12 @@ justify-content: center;
 }
 
 
-.inputSendMessage textarea{
+.inputSendMessage textarea {
     resize: none;
     margin-bottom: 10px;
     background-color: #242424;
     color: #dddddd;
-    width:600px;
+    width: 600px;
     height: 50px;
     border-radius: 10px;
     padding: 10px;
@@ -174,16 +183,16 @@ justify-content: center;
 }
 
 
-.inputSendMessage button{
-  background: none;
-  border: none;
-  width: 35px;
-  margin-bottom:10px ;
-  height: 35px;
-  color: white;
-  border-radius: 50%;
-  background-color: #242424;
-  cursor: pointer;
+.inputSendMessage button {
+    background: none;
+    border: none;
+    width: 35px;
+    margin-bottom: 10px;
+    height: 35px;
+    color: white;
+    border-radius: 50%;
+    background-color: #242424;
+    cursor: pointer;
 }
 
 .messagesList {
@@ -191,9 +200,10 @@ justify-content: center;
     display: flex;
     justify-content: center;
 }
-.messagesList .messageList{
+
+.messagesList .messageList {
     width: 70%;
-   height: 100%;
+    height: 100%;
     overflow: hidden;
     overflow-y: scroll;
     padding-bottom: 100px;
@@ -203,51 +213,105 @@ justify-content: center;
     margin-bottom: 20px;
 }
 
-.messagesList .messageList::-webkit-scrollbar{
- width: 0;
+.messagesList .messageList::-webkit-scrollbar {
+    width: 0;
 }
 
-.welcome{
+.welcome {
     width: 100%;
     height: 100vh;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.welcome h1{
+.welcome h1 {
     font-size: 60px;
     font-weight: bold;
     color: #313131;
 }
-.welcome h2{
+
+.welcome h2 {
     font-size: 60px;
     font-weight: lighter;
     color: #313131;
 }
 
-.options{
-    display:flex;
+.options {
+    display: flex;
     padding-bottom: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
     overflow: hidden;
 }
 
-.options i{
+.options i {
     width: 50%;
     justify-content: center;
     align-items: center;
     font-size: 35px;
-    display:flex;
+    display: flex;
     cursor: pointer;
 }
 
-.marked{
-   background-color: #00000038;
+.marked {
+    background-color: #00000038;
 }
 
-.notMarked{
-   background-color: none;
+.notMarked {
+    background-color: none;
+}
+
+
+@media screen and (max-width: 800px) {
+    .rooms {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: white;
+        padding: 20px;
+        height: 100vh;
+        z-index: 999;
+        overflow: hidden;
+    }
+
+    .List {
+        display: none;
+    }
+
+    .messagesList .messageList {
+        width: 100%;
+        padding: 0 5px;
+        padding-bottom: 110px;
+    }
+
+    .inputSendMessage textarea {
+        width: 300px;
+
+    }
+
+    .inputSendMessage button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .avatar {
+        width: 35px;
+        height: 35px;
+    }
+
+    .HeaderUser h1 {
+        font-size: 15px;
+        color: #313131;
+        font-weight: bold;
+    }
+
+    .HeaderUser i {
+        font-size: 32px;
+        cursor: pointer;
+        color: #313131;
+    }
+
 }

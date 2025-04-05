@@ -40,3 +40,10 @@
     font-size: 15px;
     font-weight: lighter;
 }
+
+@media screen and (max-width: 800px) {
+    .messageNotLoged div ,.messageLoged div {
+        max-width: 80%;
+        font-size: 13px;
+    }
+}
