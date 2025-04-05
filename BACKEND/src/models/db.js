@@ -12,3 +12,5 @@ db.connect((err) => {
     console.log('✅ Conectado com sucesso ao MySQL Railway!');
   }
 });
+
+export default db;
