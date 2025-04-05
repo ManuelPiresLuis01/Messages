@@ -1,13 +1,18 @@
 import Style from "./messages.module.css"
-import { SlOptions } from "react-icons/sl";
+import { RiChatSmile3Line } from "react-icons/ri";
+import { FaUsers } from "react-icons/fa6";
+import { IoIosLogOut } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
 import { HiMiniInformationCircle } from "react-icons/hi2";
 import { IoSend } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import Api from "../../../services/api.tsx";
 import Message from "../../componentes/messages/Message";
 import { MessageUserLoged, MessageUserNotLoged } from "../../componentes/message/message";
 import { useParams } from "react-router-dom";
+import { io } from "socket.io-client";
+
+const socket = io('http://localhost:3000');
 
 interface users {
     nome: string
@@ -19,44 +24,169 @@ interface userPage {
     email: string
 }
 
+interface Mensagem {
+    id: number;
+    chat_id: number;
+    remetente_id: number;
+    conteudo: string;
+    created_at: string;
+    remetente_nome: string;
+}
+
+interface chat {
+    usuario_id: number,
+    nome_usuario_conversa: string,
+    created_at: string
+}
+
 export default function Messages() {
     const { id } = useParams()
+    const { chatId } = useParams()
+    const [mensagens, setMensagens] = useState<Mensagem[]>([])
     const [usuarios, setUsuarios] = useState<users[]>([])
     const [usuariosId, setUsuariosId] = useState<userPage>()
+    const [conteudo, setConteudo] = useState<string>("")
+    const [chat, setChat] = useState<chat[]>([])
+    const [menu, setMenu] = useState<boolean>(true)
+    const [search, setSearch] = useState<string>("")
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [message, setMessage] = useState<string>("Pesquisa por usuarios")
+    const thereAre = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            const response = await Api.get(`/search/${search}`);
+            setUsuarios(response.data.usuarios);
+            if (usuarios.length == 0) {
+                setMessage("Usuario não encontrado")
+            } else
+                setMessage("")
+            setSearch("")
+        }
+    }
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollTo({
+            top: messagesEndRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        }
+      }, [mensagens]);
+      
+
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        try {
+            const response = await Api.post(`/sendMessage/${chatId}`, { conteudo })
+            setConteudo("")
+            const novaMensagem = {
+                remetente_id: response.data.remetente,
+                chat_id: Number(chatId),
+                conteudo,
+                remetente_nome: usuariosId?.nome || 'Usuário',
+                created_at: new Date().toISOString(),
+            };
+            socket.emit('send_message', novaMensagem);
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
     useEffect(() => {
         const fetch = async () => {
-            const response = await Api.get("/getUSers");
-            setUsuarios(response.data.usuarios);
+            const chats = await Api.get("/getChats")
+            setChat(chats.data.chats)
+        }
+        fetch()
+    }, [])
+    useEffect(() => {
+        const list = async () => {
+            setMensagens([])
+            const response = await Api.get(`/listMessage/${chatId}`)
+            setMensagens(response.data.mensagens)
+
         }
         const fetch1 = async () => {
             const response = await Api.get(`/getUserById/${id}`);
             setUsuariosId(response.data.usuario);
         }
+        list()
         fetch1()
-        fetch()
-    }, [id])
+    }, [id, chatId])
+
+    useEffect(() => {
+        socket.on('receive_message', (novaMensagem: Mensagem) => {
+            setMensagens((prevMensagens) => [...prevMensagens, novaMensagem]);
+        });
+
+        return () => {
+            socket.off('receive_message');
+        };
+    }, []);
+
+    const logout = async () => {
+        try {
+            localStorage.removeItem("token")
+            localStorage.clear()
+            window.location.href = "/signin"
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            submit(event as unknown as React.FormEvent<HTMLFormElement>);
+        }
+    };
 
     return (
         <div className={Style.main}>
             <div className={Style.rooms}>
                 <div className={Style.title}>
                     <h1>Conversar</h1>
-                    <i><SlOptions /></i>
+                    <i onClick={logout}><IoIosLogOut /></i>
                 </div>
-                <div className={Style.search}>
-                    <i><CiSearch /></i>
-                    <input type="search" placeholder="Pesquise nas suas conversas " />
+                <div className={Style.options}>
+                    <i onClick={() => setMenu(true)} className={menu ? Style.marked : Style.notMarked}><RiChatSmile3Line /></i>
+                    <i onClick={() => setMenu(false)} className={!menu ? Style.marked : Style.notMarked}><FaUsers /></i>
                 </div>
-                <div className={Style.role}>
-                    {
-                        usuarios && usuarios.map(users => (
-                            <Message
-                                name={users.nome}
-                                id={users.id}
-                            />
-                        ))
-                    }
-                </div>
+                {
+                    !menu ?
+                        <div>
+                            <div className={Style.search}>
+                                <i><CiSearch /></i>
+                                <input onKeyDown={thereAre} value={search} onChange={(e) => setSearch(e.target.value)} type="search" placeholder="Pesquise nas suas conversas " />
+                            </div>
+                            <div className={Style.role}>
+                                {
+                                    usuarios && usuarios.map(users => (
+                                        <Message
+                                            name={users.nome}
+                                            id={users.id}
+                                        />
+                                    ))
+                                }
+
+                                {usuarios.length == 0 && <p>{message}</p>}
+                            </div>
+                        </div>
+                        :
+                        <div>
+                            <div className={Style.role}>
+                                {
+                                    chat && chat.map((chatItem: chat) => (
+                                        <Message
+                                            name={chatItem.nome_usuario_conversa}
+                                            id={chatItem.usuario_id.toString()}
+                                        />
+                                    ))
+                                }
+                                {chat.length == 0 && <p>Usuarios nao encontrados</p>}
+                            </div>
+                        </div>
+                }
             </div>
             <div className={Style.messages}>
                 <div className={Style.HeaderUser}>
@@ -70,43 +200,26 @@ export default function Messages() {
                 </div>
                 <div className={Style.ContainerMessagesList}>
                     <div className={Style.messagesList}>
-                        <div className={Style.messageList}>
-                            <MessageUserLoged message="Oi, tudo bem?" />
-                            <MessageUserNotLoged message="Sim, e tu?" />
-                            <MessageUserLoged message="Estou bem, obrigado!" />
-                            <MessageUserNotLoged message="Que bom! O que tens feito?" />
-                            <MessageUserLoged message="Estou desenvolvendo um chat agora mesmo!" />
-                            <MessageUserNotLoged message="Sério? Parece interessante!" />
-                            <MessageUserLoged message="Sim, estou usando React e Node.js." />
-                            <MessageUserNotLoged message="Ótima escolha! Boa sorte no projeto!" />
-                            <MessageUserLoged message="Valeu! Estou focado para terminar ainda hoje." />
-                            <MessageUserNotLoged message="Isso aí! Se precisar de ajuda, me chama." />
-                            <MessageUserLoged message="Com certeza! Já tive que resolver alguns bugs." />
-                            <MessageUserNotLoged message="Bugs sempre aparecem! O importante é não desistir." />
-                            <MessageUserLoged message="Exato! Vou implementar agora a parte de tempo real." />
-                            <MessageUserNotLoged message="Boa! WebSockets ou Firebase?" />
-                            <MessageUserLoged message="WebSockets! Assim fica mais dinâmico." />
-                            <MessageUserNotLoged message="Ótima escolha! Vai rodar liso." />
-                            <MessageUserLoged message="Espero que sim! Vou testar agora." />
-                            <MessageUserNotLoged message="Boa sorte! Me avisa se der certo." />
-                            <MessageUserLoged message="Funcionou! As mensagens aparecem em tempo real." />
-                            <MessageUserNotLoged message="Incrível! Agora só falta estilizar melhor." />
-                            <MessageUserLoged message="Verdade! Vou ajustar o CSS para ficar mais bonito." />
-                            <MessageUserNotLoged message="Isso! Um bom design faz muita diferença." />
-                            <MessageUserLoged message="Sim, vou pedir ajuda ao designer para melhorar o layout." />
-                            <MessageUserNotLoged message="Boa! Assim o projeto fica mais profissional." />
-                            <MessageUserLoged message="Com certeza! Depois disso, só falta testar tudo." />
-                            <MessageUserNotLoged message="Isso aí! Garantir que não tenha bugs antes de lançar." />
-                            <MessageUserLoged message="Sim! Quero que o chat esteja 100% funcional." />
-                            <MessageUserNotLoged message="Vai conseguir! Já avançou bastante." />
-                            <MessageUserLoged message="Valeu! Estou animado para finalizar isso hoje." />
-                            <MessageUserNotLoged message="Boa sorte! Qualquer coisa, estou por aqui." />
-                        </div>
+                        {
+                            mensagens.length > 0 && (
+                                <div className={Style.messageList} ref={messagesEndRef}>
+                                {mensagens.map((mensagem) =>
+                                  mensagem.remetente_id === Number(id) ? (
+                                    <MessageUserNotLoged key={mensagem.id} message={mensagem.conteudo} />
+                                  ) : (
+                                    <MessageUserLoged key={mensagem.id} message={mensagem.conteudo} />
+                                  )
+                                )}
+                              </div>
+                              
+                            )
+                        }
+
                     </div>
-                    <div className={Style.inputSendMessage}>
-                        <textarea placeholder="Digite a sua mensagem"></textarea>
-                        <button><IoSend /></button>
-                    </div>
+                    <form onSubmit={submit} className={Style.inputSendMessage}>
+                        <textarea onKeyDown={handleKeyDown} value={conteudo} onChange={(e) => setConteudo(e.target.value)} placeholder="Digite a sua mensagem"></textarea>
+                        <button type="submit"><IoSend /></button>
+                    </form>
                 </div>
             </div>
         </div>

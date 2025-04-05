@@ -1,9 +1,10 @@
 import db from '../models/db.js';
 
 const Chat = (req, res) => {
-  const { usuario1_id, usuario2_id } = req.body;
+  const { id } = req.user;
+  const { receptor } = req.body;
 
-  if (!usuario1_id || !usuario2_id) {
+  if (!id|| !receptor) {
     return res.status(400).json({ mensagem: 'IDs dos usuários são obrigatórios.' });
   }
 
@@ -14,9 +15,9 @@ const Chat = (req, res) => {
     WHERE cu.usuario_id IN (?, ?)
     GROUP BY cu.chat_id
     HAVING COUNT(DISTINCT cu.usuario_id) = 2
-  `;
+  `
 
-  db.query(query, [usuario1_id, usuario2_id], (err, rows) => {
+  db.query(query, [id, receptor], (err, rows) => {
     if (err) {
       console.error('Erro ao buscar chat existente:', err);
       return res.status(500).json({ mensagem: 'Erro ao verificar chat existente.' });
@@ -46,7 +47,7 @@ const Chat = (req, res) => {
         INSERT INTO chat_usuarios (chat_id, usuario_id) 
         VALUES (?, ?), (?, ?)
       `;
-      db.query(insertUsersQuery, [chatId, usuario1_id, chatId, usuario2_id], (err) => {
+      db.query(insertUsersQuery, [chatId, id, chatId, receptor], (err) => {
         if (err) {
           console.error('Erro ao associar usuários ao chat:', err);
           return res.status(500).json({ mensagem: 'Erro ao associar usuários ao chat.' });

@@ -8,7 +8,7 @@
 
 .rooms {
     padding: 20px;
-    width: 250px;
+    width: 400px;
     border-right: 1px solid #646464f3;
     height: 100vh;
 }
@@ -27,7 +27,8 @@
 }
 
 .title i {
-    font-size: 15px;
+    font-size: 25px;
+    font-weight: bold;
     cursor: pointer;
     color: #313131;
 }
@@ -224,4 +225,29 @@ justify-content: center;
     font-size: 60px;
     font-weight: lighter;
     color: #313131;
+}
+
+.options{
+    display:flex;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.options i{
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    display:flex;
+    cursor: pointer;
+}
+
+.marked{
+   background-color: #00000038;
+}
+
+.notMarked{
+   background-color: none;
 }

@@ -13,7 +13,7 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/messages/:id" element={<Messages />} />
+          <Route path="/messages/:id/:chatId" element={<Messages />} />
           <Route path="*" element={<h1>444 PAGE NOT FOUND</h1>} />
         </Routes>
       </BrowserRouter>

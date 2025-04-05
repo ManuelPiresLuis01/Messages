@@ -7,15 +7,13 @@ import { useState } from 'react';
 export function SignIn() {
 const [email,Setemail] = useState<string>("")
 const [password,Setpassword] = useState<string>("")
-const navigate = useNavigate()
 const submit = async (e:React.FormEvent)=>{
-
     e.preventDefault()
 
     try {
         const response = await Api.post("/signin",{email,password})
         localStorage.setItem("token",response.data.token)
-        navigate("/main")
+       window.location.href = "/main"
     } catch (error) {
         console.error(error)
     }

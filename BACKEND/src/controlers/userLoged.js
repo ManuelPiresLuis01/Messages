@@ -8,7 +8,7 @@ const getUserProfile = async (req, res) => {
             "SELECT nome, email FROM usuarios WHERE id = ?",
             [id],
             (err, result) => {
-                if (err)  {
+                if (err) {
                     console.error(err);
                     return res.status(500).json({ error: "Erro no servidor" });
                 }
@@ -16,7 +16,7 @@ const getUserProfile = async (req, res) => {
                     return res.status(404).json({ message: "Usuário não encontrado" });
                 }
                 const { nome, email } = result[0];
-                return res.status(200).json({ nome:nome, email:email });
+                return res.status(200).json({ nome: nome, email: email, id: id });
             }
         )
     } catch (err) {

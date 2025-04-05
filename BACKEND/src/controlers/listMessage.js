@@ -29,23 +29,9 @@ const listarMensagens = (req, res) => {
         if (result.length === 0) {
             return res.status(404).json({ mensagem: 'Nenhuma mensagem encontrada para este chat.' });
         }
-
-        // Diferenciar as mensagens como 'logado' e 'naoLogado'
-        const mensagens = result.map(mensagem => {
-            return {
-                id: mensagem.id,
-                chat_id: mensagem.chat_id,
-                conteudo: mensagem.conteudo,
-                created_at: mensagem.created_at,
-                remetente_nome: mensagem.remetente_nome,
-                tipo: mensagem.remetente_id === id ? 'logado' : 'naoLogado'
-            };
-        });
-
         // Retornar as mensagens
         return res.status(200).json({
-            chat_id: chat_id,
-            mensagens: mensagens
+            mensagens: result
         });
     });
 };

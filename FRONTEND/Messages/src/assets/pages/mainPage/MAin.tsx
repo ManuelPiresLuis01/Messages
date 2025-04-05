@@ -1,6 +1,8 @@
 import Style from "../messagesPage/messages.module.css"
-import { SlOptions } from "react-icons/sl";
 import { CiSearch } from "react-icons/ci";
+import { RiChatSmile3Line } from "react-icons/ri";
+import { FaUsers } from "react-icons/fa6";
+import { IoIosLogOut } from "react-icons/io";
 import { useEffect, useState } from "react";
 import Api from "../../../services/api.tsx";
 import Message from "../../componentes/messages/Message";
@@ -11,9 +13,32 @@ interface users {
     id: string
 }
 
+interface chat {
+    usuario_id: number,
+    nome_usuario_conversa: string,
+    created_at: string
+}
+
 export default function Main() {
     const [name, setName] = useState<string>("")
     const [usuarios, setUsuarios] = useState<users[]>([])
+    const [menu, setMenu] = useState<boolean>(true)
+    const [search, setSearch] = useState<string>("")
+    const [chat, setChat] = useState<chat[]>([])
+    const [message, setMessage] = useState<string>("Pesquisa por usuarios")
+    const thereAre = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            const response = await Api.get(`/search/${search}`);
+            setUsuarios(response.data.usuarios);
+            if (usuarios.length == 0) {
+                setMessage("Usuario não encontrado")
+            } else
+                setMessage("")
+            setSearch("")
+        }
+    }
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,37 +50,71 @@ export default function Main() {
             }
         }
         const fetch = async () => {
-            const response = await Api.get("/getUSers");
-            setUsuarios(response.data.usuarios);
+            const chats = await Api.get("/getChats")
+            setChat(chats.data.chats)
         }
         fetch()
         fetchData()
 
     }, [])
+
+    const logout = async () => {
+        try {
+            localStorage.removeItem("token")
+            localStorage.clear()
+            window.location.href = "/signin"
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <div className={Style.main}>
             <div className={Style.rooms}>
                 <div className={Style.title}>
                     <h1>Conversar</h1>
-                    <i><SlOptions /></i>
+                    <i onClick={logout}><IoIosLogOut /></i>
                 </div>
-                <div className={Style.search}>
-                    <i><CiSearch /></i>
-                    <input type="search" placeholder="Pesquise nas suas conversas " />
+                <div className={Style.options}>
+                    <i onClick={() => setMenu(true)} className={menu ? Style.marked : Style.notMarked}><RiChatSmile3Line /></i>
+                    <i onClick={() => setMenu(false)} className={!menu ? Style.marked : Style.notMarked}><FaUsers /></i>
                 </div>
-                <div className={Style.role}>
-                    {
-                        usuarios && usuarios.map(users => (
-                            <Message
-                                name={users.nome}
-                                id={users.id}
-                            />
-                        ))
-                    }
+                {
+                    !menu ?
+                        <div>
+                            <div className={Style.search}>
+                                <i><CiSearch /></i>
+                                <input onKeyDown={thereAre} value={search} onChange={(e) => setSearch(e.target.value)} type="search" placeholder="Pesquise nas suas conversas " />
+                            </div>
+                            <div className={Style.role}>
+                                {
+                                    usuarios && usuarios.map(users => (
+                                        <Message
+                                            name={users.nome}
+                                            id={users.id}
+                                        />
+                                    ))
+                                }
 
-                    { !usuarios && <p>Usuarios nao encontrados</p>}
 
-                </div>
+                                {usuarios.length == 0 && <p>{message}</p>}
+                            </div>
+                        </div>
+                        :
+                        <div>
+                            <div className={Style.role}>
+                                {
+                                    chat && chat.map((chatItem: chat) => (
+                                        <Message
+                                            name={chatItem.nome_usuario_conversa}
+                                            id={chatItem.usuario_id.toString()}
+                                        />
+                                    ))
+                                }
+                                {chat.length == 0 && <p>Sem conversas, comece uma pesquisando por um usuario</p>}
+                            </div>
+                        </div>
+                }
             </div>
             <div className={Style.messages}>
                 <div className={Style.ContainerMessagesList}>

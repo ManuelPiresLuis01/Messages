@@ -9,6 +9,8 @@ import verifyToken from './middleware/verifyToken.js';
 import Chat from './controlers/MessageChat.js' 
 import listMessage from './controlers/listMessage.js';
 import sendMessage from './controlers/sendMessage.js';
+import searchUsersByName from './controlers/search.js';
+import getUserChats from './controlers/getChats.js';
 
 const app = express();
 app.use(cors());
@@ -23,8 +25,10 @@ app.post("/signin", signin)
 app.post("/chat", verifyToken, Chat);
 app.post("/sendMessage/:chat_id", verifyToken, sendMessage);
 app.get("/listMessage/:chat_id", verifyToken, listMessage);
+app.get("/search/:nome", verifyToken, searchUsersByName);
 app.get("/me", verifyToken, getUserProfile);
 app.get("/getUsers", verifyToken,getAllUsers);
 app.get("/getUserById/:id", verifyToken,getUserById);
+app.get("/getChats", verifyToken, getUserChats);
 
 export default app;
