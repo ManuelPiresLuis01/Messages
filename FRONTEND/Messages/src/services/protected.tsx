@@ -5,7 +5,7 @@ const ProtectedLayout: React.FC = () => {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/welcome" replace />;
   }
 
   return <Outlet />;
