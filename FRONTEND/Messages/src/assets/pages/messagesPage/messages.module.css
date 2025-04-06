@@ -78,18 +78,8 @@
     overflow-y: scroll;
 }
 
-
-.role::-webkit-scrollbar-thumb {
-    width: 10px;
-    border-radius: 20px;
-    background-color: #313131;
-}
-
-
 .role::-webkit-scrollbar {
-    width: 5px;
-    border-radius: 30px;
-    background-color: #31313128;
+    width: 0;
 }
 
 .messages {
@@ -165,7 +155,6 @@
     gap: 10px;
     padding: 0 20px;
 }
-
 
 .inputSendMessage textarea {
     resize: none;
