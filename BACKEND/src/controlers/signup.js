@@ -3,7 +3,7 @@ import { hashPassword } from "../SERVICES/authservice.js";
 
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
-
+console.log([name,email,password])
     try {
         
         db.query('SELECT id FROM usuarios WHERE email = ?', [email], async (err, result) => {

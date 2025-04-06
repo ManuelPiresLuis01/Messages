@@ -12,7 +12,8 @@ import { MessageUserLoged, MessageUserNotLoged } from "../../componentes/message
 import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io(import.meta.env.VITE_API_URL);
+const apiURL = import.meta.env.VITE_API_URL;
+const socket = io(apiURL);
 
 interface users {
     nome: string
