@@ -9,7 +9,7 @@ const SplashScreen: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/signin");
-    }, 4000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [navigate]);
