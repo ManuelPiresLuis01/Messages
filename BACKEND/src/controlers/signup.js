@@ -3,7 +3,6 @@ import { hashPassword } from "../SERVICES/authservice.js";
 
 const signup = async (req, res) => {
     const { name, email, password } = req.body;
-console.log([name,email,password])
     try {
         
         db.query('SELECT id FROM usuarios WHERE email = ?', [email], async (err, result) => {
@@ -16,7 +15,6 @@ console.log([name,email,password])
 
             
             const passwordHash = await hashPassword(password);
-            console.log(passwordHash);
             
             db.query('INSERT INTO usuarios (nome, email, password_hash, created_at) VALUES (?, ?, ?, current_timestamp())',
                 [name, email, passwordHash], (err, result) => {
