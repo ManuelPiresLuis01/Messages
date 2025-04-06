@@ -14,12 +14,4 @@ const db = mysql.createPool({
   queueLimit: 0               // Não há limite para o número de requisições na fila
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Erro na conexão:', err);
-    return;
-  }
-  console.log('Conectado ao banco de dados MySQL!');
-});
-
 export default db;
