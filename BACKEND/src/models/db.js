@@ -1,16 +1,22 @@
-import dotenv from 'dotenv';
 import mysql from 'mysql2';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-const db= mysql.createConnection("mysql://root:SRcbBobVheyvSHWrCgSUgiQysLizbqIV@turntable.proxy.rlwy.net:52898/railway");
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
+});
 
 db.connect((err) => {
   if (err) {
-    console.error('Erro ao conectar:', err);
-  } else {
-    console.log('✅ Conectado com sucesso ao MySQL Railway!');
+    console.error('Erro na conexão:', err);
+    return;
   }
+  console.log('Conectado ao banco de dados MySQL!');
 });
 
 export default db;
