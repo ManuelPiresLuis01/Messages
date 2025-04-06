@@ -47,6 +47,7 @@ export default function Messages() {
     const navigate = useNavigate()
     const [mensagens, setMensagens] = useState<Mensagem[]>([])
     const [usuarios, setUsuarios] = useState<users[]>([])
+    const [users, setUsers] = useState<users[]>([])
     const [usuariosId, setUsuariosId] = useState<userPage>()
     const [conteudo, setConteudo] = useState<string>("")
     const [chat, setChat] = useState<chat[]>([])
@@ -102,6 +103,12 @@ export default function Messages() {
             const chats = await Api.get("/getChats")
             setChat(chats.data.chats)
         }
+
+        const fetch1 = async () => {
+            const response = await Api.get("/getUsers")
+            setUsers(response.data.usuarios);
+        }
+        fetch1()
         fetch()
     }, [])
     useEffect(() => {
@@ -166,16 +173,27 @@ export default function Messages() {
                             <div className={Style.role}>
                                 {
                                     usuarios && usuarios.map(users => (
-                                        <div key={users.id} onClick={()=>setRoom(!room)} >
+                                        <div key={users.id} onClick={() => setRoom(!room)} >
                                             <Message
-                                            name={users.nome}
-                                            id={users.id}
-                                        />
+                                                name={users.nome}
+                                                id={users.id}
+                                            />
                                         </div>
                                     ))
                                 }
 
-                                {usuarios.length == 0 && <p>{message}</p>}
+                                {search.length < 1 && usuarios.length == 0 && <p>{message}</p>}
+
+                                {
+                                    users && search.length == 0 && usuarios.length < 1 && users.map(users => (
+                                        <div key={users.id} onClick={() => setRoom(!room)} >
+                                            <Message
+                                                name={users.nome}
+                                                id={users.id}
+                                            />
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                         :
@@ -183,11 +201,11 @@ export default function Messages() {
                             <div className={Style.role}>
                                 {
                                     chat && chat.map((chatItem: chat) => (
-                                        <div key={chatItem.id} onClick={()=>setRoom(!room)} >
-                                        <Message
-                                            name={chatItem.nome_usuario_conversa}
-                                            id={chatItem.usuario_id.toString()}
-                                        />
+                                        <div key={chatItem.id} onClick={() => setRoom(!room)} >
+                                            <Message
+                                                name={chatItem.nome_usuario_conversa}
+                                                id={chatItem.usuario_id.toString()}
+                                            />
                                         </div>
                                     ))
                                 }
@@ -203,7 +221,7 @@ export default function Messages() {
                         <h1>{usuariosId?.nome}</h1>
                     </div>
                     <abbr title={`nome:${usuariosId?.nome} , email:${usuariosId?.email}`}>
-                        <i onClick={()=>setRoom(!room)}>< IoOptionsSharp  /></i>
+                        <i onClick={() => setRoom(!room)}>< IoOptionsSharp /></i>
                     </abbr>
                 </div>
                 <div className={Style.ContainerMessagesList}>
