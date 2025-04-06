@@ -9,7 +9,7 @@ import { useRef, useEffect, useState } from "react";
 import Api from "../../../services/api.tsx";
 import Message from "../../componentes/messages/Message";
 import { MessageUserLoged, MessageUserNotLoged } from "../../componentes/message/message";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
 const apiURL = import.meta.env.VITE_API_URL;
@@ -44,6 +44,7 @@ interface chat {
 export default function Messages() {
     const { id } = useParams()
     const { chatId } = useParams()
+    const navigate = useNavigate()
     const [mensagens, setMensagens] = useState<Mensagem[]>([])
     const [usuarios, setUsuarios] = useState<users[]>([])
     const [usuariosId, setUsuariosId] = useState<userPage>()
@@ -132,7 +133,7 @@ export default function Messages() {
         try {
             localStorage.removeItem("token")
             localStorage.clear()
-            window.location.href = "/signin"
+            navigate("/signin")
         } catch (error) {
             console.error(error)
         }
